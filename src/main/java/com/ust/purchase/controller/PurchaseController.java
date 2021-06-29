@@ -21,92 +21,54 @@ import com.ust.purchase.service.PurchaseService;
 @RequestMapping("/api")
 public class PurchaseController {
 
-	
-	
-	
 	private PurchaseService purchaseService;
-	
+
 	@Autowired
 	public PurchaseController(PurchaseService thePurchaseService) {
 		purchaseService = thePurchaseService;
 	}
-	
-	
-	
-	
-	
-	@GetMapping("/purchases")
-	public ResponseEntity <List<Purchase>> findAll() {
-		
-		List<Purchase> purchaseList =purchaseService.findAll();
-		return new ResponseEntity<List<Purchase>>( purchaseList,HttpStatus.OK);
-		
-	}
-	
-	
-	
-	
-	@PostMapping("/purchases")
-	public Purchase addPurchase(@RequestBody Purchase thePurchase) {
-		
-	
-		
-		thePurchase.setSupplierId(0);
-		
-		purchaseService.save(thePurchase);
-		
-		return thePurchase;
-	}
-	
-	
 
 	
+
+	@PostMapping("/add")
+	public ResponseEntity<Purchase> save(@RequestBody Purchase purchase) {
+		return new ResponseEntity<Purchase>(purchaseService.save(purchase), HttpStatus.CREATED);
+
+	}
 	
 	
+	@GetMapping("/allPurchases")
+	public ResponseEntity<List<Purchase>> findAll() {
+
+		List<Purchase> purchaseList = purchaseService.findAll();
+		return new ResponseEntity<List<Purchase>>(purchaseList, HttpStatus.OK);
+
+	}
+
 	
+
 	@GetMapping("/purchases/{supplierId}")
-	public Purchase getPurchase(@PathVariable int supplierId){
+	public ResponseEntity<Purchase> getPurchaseById(@PathVariable("supplierId") int supplierId) {
+			return new ResponseEntity<Purchase>(purchaseService.findById(supplierId), HttpStatus.OK);
+	}
 	
-		Purchase purchases = purchaseService.findById(supplierId);
-		if(purchases==null) {
-			throw new RuntimeException("Supplier id not found");
+	
+	@PutMapping("/purchases")
+	public ResponseEntity<Purchase> updatePurchase(@RequestBody Purchase purchase) throws Exception {
+
+		Purchase purchase1 = purchaseService.updatePurchase(purchase);
+		if (purchase1 != null) {
+			return new ResponseEntity<>(purchase1, HttpStatus.OK);
 		}
-			return purchases;
-		}
-	
-	
-	
-	
-		
-		@PutMapping("/purchases")
-		public Purchase updatePurchase(@RequestBody Purchase thePurchase) {
-			
-			purchaseService.save(thePurchase);
-			
-			return thePurchase;
-		}
-		
-		
-		
-		
-		
-		
-		@DeleteMapping("/purchases/{supplierId}")
-		public String deletePurchase(@PathVariable int purchaseId) {
-			
-			Purchase tempPurchase = purchaseService.findById(purchaseId);
-			
-			
-			if (tempPurchase == null) {
-				throw new RuntimeException("Purchase id not found - " + purchaseId);
-			}
-			
-			purchaseService.deleteById(purchaseId);
-			
-			return "Deleted purchase id - " + purchaseId;
-		}
-		
-		
-	
+
+		throw new Exception();
 
 	}
+	
+	@DeleteMapping("/purchases/{supplierId}")
+	public ResponseEntity<Purchase> deleteOrder(@PathVariable("supplierId") int supplierId) {
+		Purchase purchase = purchaseService.deleteById(supplierId);
+		return new ResponseEntity<Purchase>(purchase, HttpStatus.OK);
+	}
+
+}

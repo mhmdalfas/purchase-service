@@ -2,6 +2,7 @@ package com.ust.purchase.service;
 
 import java.util.List;
 
+
 import com.ust.purchase.model.Purchase;
 
 public interface PurchaseService {
@@ -11,8 +12,10 @@ public interface PurchaseService {
 	
 	public Purchase findById(int theId);
 	
-	public void save(Purchase thePurchase);
+	public Purchase save(Purchase thePurchase);
 	
-	public void deleteById(int theId);
+	public Purchase deleteById(int theId);
+	
+	Purchase updatePurchase(Purchase purchase) throws Exception;
 	
 }
