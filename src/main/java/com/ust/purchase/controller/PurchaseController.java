@@ -3,6 +3,8 @@ package com.ust.purchase.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +36,10 @@ public class PurchaseController {
 	
 	
 	@GetMapping("/purchases")
-	public List<Purchase> findAll() {
+	public ResponseEntity <List<Purchase>> findAll() {
 		
-		return purchaseService.findAll();
+		List<Purchase> purchaseList =purchaseService.findAll();
+		return new ResponseEntity<List<Purchase>>( purchaseList,HttpStatus.OK);
 		
 	}
 	
@@ -62,9 +65,9 @@ public class PurchaseController {
 	
 	
 	@GetMapping("/purchases/{supplierId}")
-	public Purchase getPurchase(@PathVariable int purchaseId){
+	public Purchase getPurchase(@PathVariable int supplierId){
 	
-		Purchase purchases = purchaseService.findById(purchaseId);
+		Purchase purchases = purchaseService.findById(supplierId);
 		if(purchases==null) {
 			throw new RuntimeException("Supplier id not found");
 		}
