@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ust.purchase.exception.SupplierNotFound;
 import com.ust.purchase.model.Purchase;
 import com.ust.purchase.service.PurchaseService;
 
@@ -28,47 +29,54 @@ public class PurchaseController {
 		purchaseService = thePurchaseService;
 	}
 
-	
-
 	@PostMapping("/add")
-	public ResponseEntity<Purchase> save(@RequestBody Purchase purchase) {
-		return new ResponseEntity<Purchase>(purchaseService.save(purchase), HttpStatus.CREATED);
-
+	public ResponseEntity<?> save(@RequestBody Purchase purchase) {
+		try {
+		return new ResponseEntity<Purchase>( purchaseService.savePurchase(purchase),HttpStatus.CREATED);
+		}
+		catch(Exception e)
+		{
+			return new ResponseEntity<String>("Wrong Input",HttpStatus.CONFLICT);
+		}
 	}
-	
-	
+
 	@GetMapping("/allPurchases")
-	public ResponseEntity<List<Purchase>> findAll() {
+//	public ResponseEntity<List<Purchase>> findAll() {
+//
+//		List<Purchase> purchaseList = purchaseService.findAll();
+//		return new ResponseEntity<List<Purchase>>(purchaseList, HttpStatus.OK);
 
-		List<Purchase> purchaseList = purchaseService.findAll();
-		return new ResponseEntity<List<Purchase>>(purchaseList, HttpStatus.OK);
-
+	public List<Purchase> getAllUsers() {
+		List<Purchase> allUsers =purchaseService.findAll();
+//		return new ResponseEntity<>(allUsers, HttpStatus.OK);
+		return allUsers;
 	}
 
-	
-
-	@GetMapping("/purchases/{supplierId}")
-	public ResponseEntity<Purchase> getPurchaseById(@PathVariable("supplierId") int supplierId) {
-			return new ResponseEntity<Purchase>(purchaseService.findById(supplierId), HttpStatus.OK);
+	@GetMapping("/purchases/{supplierName}")
+	public ResponseEntity<?> getPurchaseById(@PathVariable("supplierName") String SupplierName) {
+		
+		try {
+		return new ResponseEntity<Purchase>(purchaseService.findByName(SupplierName), HttpStatus.OK);}
+		catch(Exception e){ 
+			return new ResponseEntity<String>("Wrong Input",HttpStatus.CONFLICT);
+		}
 	}
-	
-	
-	@PutMapping("/purchases")
-	public ResponseEntity<Purchase> updatePurchase(@RequestBody Purchase purchase) throws Exception {
 
-		Purchase purchase1 = purchaseService.updatePurchase(purchase);
-		if (purchase1 != null) {
-			return new ResponseEntity<>(purchase1, HttpStatus.OK);
+	@PutMapping("/purchases/")
+	public ResponseEntity<?> updatePurchase(@RequestBody  Purchase purchase) throws Exception {
+
+		try {
+			return new ResponseEntity<Purchase>(purchaseService.updatePurchase(purchase), HttpStatus.OK);
+		} catch (SupplierNotFound e) {
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.OK);
 		}
 
-		throw new Exception();
-
 	}
-	
-	@DeleteMapping("/purchases/{supplierId}")
-	public ResponseEntity<Purchase> deleteOrder(@PathVariable("supplierId") int supplierId) {
-		Purchase purchase = purchaseService.deleteById(supplierId);
-		return new ResponseEntity<Purchase>(purchase, HttpStatus.OK);
+
+	@DeleteMapping("/purchases/{supplierName}")
+	public ResponseEntity<Purchase> deleteOrder(@PathVariable("supplierName") String supplierName) {
+		boolean purchase = purchaseService.deleteByName(supplierName);
+		return new ResponseEntity<Purchase>(HttpStatus.OK);
 	}
 
 }

@@ -12,10 +12,14 @@ public interface PurchaseService {
 	
 	public Purchase findById(int theId);
 	
-	public Purchase save(Purchase thePurchase);
+	public Purchase savePurchase(Purchase thePurchase);
 	
-	public Purchase deleteById(int theId);
+	public boolean deleteByName(String name);
 	
+//	Purchase updatePurchase(Purchase purchase) throws Exception;
+
+	Purchase findByName(String name);
+
 	Purchase updatePurchase(Purchase purchase) throws Exception;
 	
 }

@@ -37,32 +37,71 @@ public class PurchaseServiceImpl implements PurchaseService {
 		return thePurchase;
 	}
 
+	
+	
 	@Override
-	public Purchase save(Purchase thePurchase) {
-      	return	repo.save(thePurchase);
+	public Purchase findByName(String name) {
+		Optional<Purchase> result = repo.findBySupplierName(name);
+		Purchase thePurchase = null;
+		if (result.isPresent()) {
+			thePurchase = result.get();
+		} else {
+			throw new RuntimeException("Did not find supplier Name - " + name);
+		}
+
+		return thePurchase;
+	}
+	
+	
+	@Override
+	public Purchase savePurchase(Purchase thePurchase) {
+      		 repo.save(thePurchase);
+      		 return thePurchase;
+      		
 
 	}
 
 	@Override
-	public Purchase deleteById(int supplierId) {
+	public boolean deleteByName(String name) {
 		@SuppressWarnings("unused")
-		Optional<Purchase> optional =repo.findById(supplierId);
-		Purchase supplierById = repo.findById(supplierId).get();
-		repo.deleteById(supplierId);
-		return supplierById;
+		Optional<Purchase> optional =repo.findBySupplierName(name);
+		Purchase supplierByName = repo.findBySupplierName(name).get();
+		repo.delete(supplierByName);
+		return true;
 		
 
 	}
+	
+	
 
+	
 	@Override
 	public Purchase updatePurchase(Purchase purchase) throws Exception {
-		if(repo.existsById(purchase.getSupplierId())) {
-			Purchase save = repo.save(purchase);
-					return save;
+		Optional<Purchase> tempPurchase=repo.findById(purchase.getId());
+		if(! tempPurchase.isPresent()) {
+			throw new Exception("Supplier is not  present");
 		}
-		else
-			throw new Exception();
+		
+		
+		return repo.save(purchase);
+		
 	}
+
+//		if(repo.existsById(purchase.getId())) {
+//			Purchase save = repo.save(purchase);
+//					return save;
+//		}
+//		else
+////			throw new Exception();
+//	try {
+//		
+//		return repo.findBySupplierName(name).get();
+//	}
+//	catch (NoSuchElementException e){
+//		throw new Exception();
+//	}
+		
 	}
+	
 
 

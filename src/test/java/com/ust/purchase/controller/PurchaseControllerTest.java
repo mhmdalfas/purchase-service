@@ -1,127 +1,225 @@
-//package com.ust.purchase.controller;
-//
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.junit.jupiter.api.Assertions.assertFalse;
-//import static org.junit.jupiter.api.Assertions.assertNull;
-//import static org.junit.jupiter.api.Assertions.assertTrue;
-//
-//import java.util.List;
-//
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.TestMethodOrder;
-//import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-//import org.junit.jupiter.api.Order;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-//import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-//import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-//import org.springframework.test.annotation.Rollback;
-//
-//import com.ust.purchase.model.Purchase;
-//import com.ust.purchase.repository.PurchaseRepository;
-//
-//@DataJpaTest
-//@AutoConfigureTestDatabase(replace = Replace.NONE)
-//@TestMethodOrder(OrderAnnotation.class)
-//class PurchaseControllerTest {
-//
-//	
-//	   @Autowired
-//	    private PurchaseRepository repo;
-//	
-//	   @Test
-//	   @Rollback(false)
-//	   @Order(1)
-//	   void testFindAll() {
-//		
-//		 Purchase savedPurchase = new Purchase("Tata", "India");
-//		 repo.save(savedPurchase);
+package com.ust.purchase.controller;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withCreatedEntity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.ust.purchase.model.Product;
+import com.ust.purchase.model.Purchase;
+import com.ust.purchase.service.PurchaseService;
+
+
+@RunWith(SpringRunner.class)
+@WebMvcTest
+class PurchaseControllerTest {
+
+	@Autowired
+	private MockMvc mockMvc;
+	@MockBean
+	PurchaseService purchaseService;
+	@InjectMocks
+	PurchaseController purchaseController;
+	
+	
+	Purchase purchase;
+	Product product = null;
+	
+	
+	 List<Product> product1 = new ArrayList<Product>();
+
+	    public void setProduct(List<Product> product1) {
+	        product1.add(new Product("Karnataka", "123456","647",5));
+	    }
+	 @BeforeEach
+	    public void setUp() {
+	  
+//	        Product add=new Product(6,"String1","String2","String3",123456);
+//	        purchase=new Purchase(10,"String1","String2",product );
+	        
+//	        product = new Product(6,"String1","String2");
+//			purchase = new Purchase(10,"String1","String2",product);
+//			allUsers.add(user2);
+			
+			purchase = new Purchase(01,"John","Doe",(List<Product>) product1);
+	       
+
+	    }
+//	 @Test
+//		public void insertPersonTest() throws Exception {
+//			when(purchaseService.save(purchase)).thenReturn(true);
+//			mockMvc.perform(MockMvcRequestBuilders.post("/api/add").contentType(MediaType.APPLICATION_JSON)
+//					.content(new Gson().toJson(purchase))).andExpect(MockMvcResultMatchers.status().isExpectationFailed());
+//		}
+
+	        
+//	 @Test
+//		void testSaveUserAndReturnSavedDetails() throws Exception {
+//			when(purchaseService.savePurchase(purchase)).thenReturn(purchase);
+//			
+//			mockMvc.perform(post("/api/add")
+//					.contentType(MediaType.APPLICATION_JSON)
+//					.content(convertStringtoJSON(purchase)))
+//				.andExpect(status().isCreated())
+//				.andDo(MockMvcResultHandlers.print());
+//			
+//			verify(purchaseService, times(1)).savePurchase(purchase);
+//		}
+	 
+	 @Test
+		public void insertPersonTest() throws Exception {
+			when(purchaseService.savePurchase(purchase)).thenReturn(purchase);
+			mockMvc.perform(MockMvcRequestBuilders.post("/api/add").contentType(MediaType.APPLICATION_JSON)
+					.content(new Gson().toJson(purchase))).andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+	 }
+	 
+	 @Test
+	    void updateData() throws Exception {
+	        when(purchaseService.updatePurchase(purchase)).thenReturn(purchase);
+	        mockMvc.perform(MockMvcRequestBuilders.put("/api/purchases/").contentType(MediaType.APPLICATION_JSON)
+	                .content(new Gson().toJson(purchase))).andExpect(MockMvcResultMatchers.status().isOk());
+
+	    }
+	 
+	 
+	 
+	 public static String convertStringtoJSON(Object object) throws Exception {
+			try {
+				return new ObjectMapper().writeValueAsString(object);
+				
+			}catch(Exception e) {
+				throw new Exception();
+			}
+	       
+	    }}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	@SuppressWarnings("deprecation")
+//@Before
+//	public void setUp() {
+//		MockitoAnnotations.initMocks(this);
+//		mockMvc = MockMvcBuilders.standaloneSetup(purchaseController).build();
 //	     
-////		    assertThat(savedPurchase.getSupplierId()).isGreaterThan(0);
+//		Product add =new Product(6,"String1","String2","String3",123456);
+//		purchase=new Purchase(11,"String1","String2",product);
 //		
 //		
-//	}
-//	   
-//	   @Test
-//	   @Rollback(false)
-//	   @Order(2)
-//	   public void testCreateProduct() {
-//	       Purchase savedProduct = repo.save(new Purchase("Honda", "Japan"));
-//	        
-//	       assertThat(savedProduct.getSupplierId()).isGreaterThan(0);
-//	   }
-//	   
-//	   
-////
-////	@Test
-////	void testAddPurchase() {
-////		fail("Not yet implemented");
-////	}
-////
-//	@Test
-//	@Rollback(false)
-//	@Order(3)
-//	void testGetPurchaseBySupplierName() {
-//		String name="Honda";
-//		Purchase purchase=repo.findBysupplierName(name);
-//		
-//		assertThat(purchase.getSupplierName()).isEqualTo(name);
-//	}
-//	
-//	@Test
-//	@Rollback(false)
-//	@Order(4)
-//	void testGetPurchaseByInvalidSupplierName() {
-//		String name="Suzuki";
-//		Purchase purchase=repo.findBysupplierName(name);
-//		
-//		assertNull(purchase);
-//	}
-//	
 //
+//	}
 //
 //	@Test
-//	@Rollback(false)
-//	@Order(5)
-//	void testUpdatePurchase() {
-//		
-//		String sName="Toyota";
-//		Purchase purchase=new Purchase(sName,"Japan");
-//		purchase.setSupplierId(2);
-//		
-//		repo.save(purchase);
-//		
-//		Purchase updatedPurchase=repo.findBysupplierName(sName);
-//		assertThat(updatedPurchase.getSupplierName()).isEqualTo(sName);
-//		
-//	}
-//	
-//	@Test
-//	@Rollback(false)
-//	public void testListProducts() {
-//		
-//	List <Purchase> purchase=repo.findAll();
-//	
-//	for(Purchase purchases :purchase) {
-//		System.out.println(purchases);
-//	}
-//	
-//	assertThat(purchase).size().isGreaterThan(0);
-//		
-//	}
-//	
-//	
-//	@Test
-//	@Rollback(false)
-//	@Order(6)
-//	void testDeletePurchase() {
-//		Integer id=2;
-//		boolean isExistBeforeDelete=repo.findById(id).isPresent();
-//		repo.deleteById(id);
-//		
-//		boolean notExistAfterDelete=repo.findById(id).isPresent();
-//		assertTrue(isExistBeforeDelete);
-//		assertFalse(notExistAfterDelete);
+//	void registerSupplierTest() throws Exception {
+//		Assertions.assertThrows(NullPointerException.class, () -> {
+//			when(purchaseService.save(purchase)).thenThrow(new NullPointerException("Error occurred"));
+//			mockMvc.perform(
+//					post("/add").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+//					.andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
+//		});
+//
 //	}
 //
-//}
+//	@Test
+//	void updateSupplierTest() throws Exception {
+//		Assertions.assertThrows(NullPointerException.class, () -> {
+//			when(purchaseService.updatePurchase(purchase)).thenThrow(new NullPointerException("Invalid Input"));
+//			mockMvc.perform(
+//					put("/customer/kkkk").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+//					.andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+//		});
+//	}
+//
+//	@Test
+//	void deletePurchaseTest() throws Exception {
+//		Assertions.assertThrows(NullPointerException.class, () -> {
+//			when(purchaseService.deleteById(4)).thenReturn(purchase);
+//			mockMvc.perform(MockMvcRequestBuilders.delete("/user/Jack998").contentType(MediaType.APPLICATION_JSON))
+//					.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
+//		});
+//
+//	}
+//
+//	@Test
+//	void getCustomerBySupplierIdTest() throws Exception {
+//		Assertions.assertThrows(NullPointerException.class, () -> {
+//			when(purchaseService.findById(1)).thenReturn(purchase);
+//			mockMvc.perform(get("/api/purchases").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+//					.andDo(MockMvcResultHandlers.print());
+//		});
+//
+//	}
+//
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	void getAllPurchaseTest() throws Exception {
+//		Assertions.assertThrows(NullPointerException.class, () -> {
+//			when(purchaseService.findAll()).thenReturn((List<Purchase>) purchase);
+//			mockMvc.perform(get("/api/find").contentType(MediaType.APPLICATION_JSON))
+//					.andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+//		});
+//	}
+
+
