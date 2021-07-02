@@ -46,7 +46,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 	@Override
 	public Purchase save(Purchase thePurchase) throws PurchaseAlreadyExists {
 	if(repo.findById(thePurchase.getSupplierId()).isPresent()) {
-		throw new PurchaseAlreadyExists("");
+		throw new PurchaseAlreadyExists("Supplier already exists!");
 		
 	}
 	return repo.save(thePurchase);	

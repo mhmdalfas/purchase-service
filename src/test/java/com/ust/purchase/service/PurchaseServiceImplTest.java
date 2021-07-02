@@ -28,7 +28,7 @@ class PurchaseServiceImplTest {
 	PurchaseServiceImpl purchaseService;
 	List<Purchase> purchaseList = new ArrayList<>();
 	Optional<Purchase> options;
-	Purchase purchase = new Purchase(01,"John","Doe",null);
+	Purchase purchase = new Purchase(3,"John","Doe",null);
 
 	@Test
 	public void saveaPurchaseTest() {

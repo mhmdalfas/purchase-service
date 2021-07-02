@@ -30,57 +30,38 @@ public class PurchaseController {
 		purchaseService = thePurchaseService;
 	}
 
-	
-
-	@SuppressWarnings("unlikely-arg-type")
 	@PostMapping("/add")
 	public ResponseEntity<?> save(@RequestBody Purchase purchase) throws PurchaseAlreadyExists {
 		try {
-			if(purchaseService.save(purchase).equals("Supplier Id is already present"))
-					{
-	    		 return new ResponseEntity<String>("Supplier Id is already present", HttpStatus.FORBIDDEN);
+			purchaseService.save(purchase);
+			return new ResponseEntity<Purchase>(purchase, HttpStatus.CREATED);
 
-					}
-			
-				return new ResponseEntity<Purchase>(purchase, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.FORBIDDEN);
-		}
-		}
-	
-	
-	
 	@GetMapping("/allPurchases")
 	public ResponseEntity<?> findAll() {
 
 		try {
-		List<Purchase> purchaseList = purchaseService.findAll() ;
-		return new ResponseEntity<List<Purchase>>(purchaseList, HttpStatus.OK);
+			List<Purchase> purchaseList = purchaseService.findAll();
+			return new ResponseEntity<List<Purchase>>(purchaseList, HttpStatus.OK);
 
-	}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			return new ResponseEntity<String>("Empty Data", HttpStatus.FORBIDDEN);
 		}
 	}
-	
-	
 
 	@GetMapping("/purchases/{supplierId}")
 	public ResponseEntity<?> getPurchaseById(@PathVariable("supplierId") int supplierId) {
 		try {
 			return new ResponseEntity<Purchase>(purchaseService.findById(supplierId), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("Supplier ID Not Found", HttpStatus.FORBIDDEN);
 		}
-			catch(Exception e)
-			{
-				return new ResponseEntity<String>("Supplier ID Not Found", HttpStatus.FORBIDDEN);
-			}
 	}
-	
-	
+
 	@PutMapping("/purchases")
 	public ResponseEntity<Purchase> updatePurchase(@RequestBody Purchase purchase) throws Exception {
 
@@ -92,15 +73,13 @@ public class PurchaseController {
 		throw new Exception();
 
 	}
-	
+
 	@DeleteMapping("/purchases/{supplierId}")
 	public ResponseEntity<?> deleteOrder(@PathVariable("supplierId") int supplierId) {
 		try {
-		Purchase purchase = purchaseService.deleteById(supplierId);
-		return new ResponseEntity<Purchase>(purchase, HttpStatus.OK);
-		}
-		catch(Exception e)
-		{
+			Purchase purchase = purchaseService.deleteById(supplierId);
+			return new ResponseEntity<Purchase>(purchase, HttpStatus.OK);
+		} catch (Exception e) {
 			return new ResponseEntity<String>("Supplier ID Not Found", HttpStatus.FORBIDDEN);
 		}
 	}
