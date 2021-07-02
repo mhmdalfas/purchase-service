@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ust.purchase.exception.PurchaseAlreadyExists;
 import com.ust.purchase.model.Purchase;
 import com.ust.purchase.repository.PurchaseRepository;
 @ExtendWith(MockitoExtension.class)
@@ -32,7 +33,13 @@ class PurchaseServiceImplTest {
 	@Test
 	public void saveaPurchaseTest() {
 		Mockito.when(repo.save(purchase)).thenReturn(purchase);
-		Purchase purchase1 = purchaseService.save(purchase);
+		Purchase purchase1 = null;
+		try {
+			purchase1 = purchaseService.save(purchase);
+		} catch (PurchaseAlreadyExists e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assertEquals(purchase1, purchase);
 	}
 

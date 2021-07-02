@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ust.purchase.exception.PurchaseAlreadyExists;
 import com.ust.purchase.model.Purchase;
 import com.ust.purchase.repository.PurchaseRepository;
 
@@ -36,11 +37,20 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 		return thePurchase;
 	}
-
+//
+//	@Override
+//	public Purchase save(Purchase thePurchase) {
+//      	return	repo.save(thePurchase);
+//
+//	}
 	@Override
-	public Purchase save(Purchase thePurchase) {
-      	return	repo.save(thePurchase);
-
+	public Purchase save(Purchase thePurchase) throws PurchaseAlreadyExists {
+	if(repo.findById(thePurchase.getSupplierId()).isPresent()) {
+		throw new PurchaseAlreadyExists("");
+		
+	}
+	return repo.save(thePurchase);	
+	
 	}
 
 	@Override

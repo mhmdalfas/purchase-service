@@ -2,7 +2,10 @@ package com.ust.purchase.model;
 
 import java.util.List;
 
+
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -11,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Purchase {
 
 	@Id
+	@Indexed(unique=true)
 	private int supplierId;
 	private String supplierName;
 	private String sAddress;

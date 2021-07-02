@@ -2,7 +2,7 @@ package com.ust.purchase.service;
 
 import java.util.List;
 
-
+import com.ust.purchase.exception.PurchaseAlreadyExists;
 import com.ust.purchase.model.Purchase;
 
 public interface PurchaseService {
@@ -12,7 +12,7 @@ public interface PurchaseService {
 	
 	public Purchase findById(int theId);
 	
-	public Purchase save(Purchase thePurchase);
+	public Purchase save(Purchase thePurchase) throws PurchaseAlreadyExists;
 	
 	public Purchase deleteById(int theId);
 	
